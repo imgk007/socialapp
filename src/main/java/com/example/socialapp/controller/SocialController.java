@@ -4,8 +4,10 @@ import com.example.socialapp.user.User;
 import com.example.socialapp.user.UserDaoService;
 import com.example.socialapp.user.UserNotFoundException;
 import jakarta.validation.Valid;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
+
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,46 +16,36 @@ import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
 public class SocialController {
-
-    private MessageSource messageSource;
-    public SocialController(MessageSource messageSource){
-        this.messageSource=messageSource;
-    }
     private UserDaoService service;
 
-    //public SocialController(UserDaoService service) {
-    //    this.service=service;
-    //}
-
-    @GetMapping("/hello")
-    public String helloWorld () {
-        return "Hi, it works GK!!!!!";
+    public SocialController(UserDaoService service) {
+        this.service=service;
     }
-
-    //internationalization-> change of language using header Accept-Language
-    @GetMapping("/helloi18n")
-    public String helloWorldInternationalization () {
-        Locale locale= LocaleContextHolder.getLocale();
-        return messageSource.getMessage("good.morning.message",null,"Default Message",locale);
-    }
-
-
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return service.findAll();
     }
 
+
+    //here we are making the method as entity model to wrap the pojo and with link builder,we made it as link
     @GetMapping("/users/{id}")
-    public User getSpecificUser(@PathVariable int id) {
+    public EntityModel<User> getSpecificUser(@PathVariable int id) {
         User user=service.findOne(id);
         //if the user is null, it will throw exception
         if(user==null)
             throw new UserNotFoundException("id:"+id);
+        EntityModel<User> entityModel=EntityModel.of(user);
 
-        return user;
+        //instead of hardcoding the URL, here it to point the controller class and its method using HATEOAS
+        WebMvcLinkBuilder link= linkTo(methodOn(this.getClass()).getAllUsers());
+        //here we are adding the link which we retieved with linkTo()
+        entityModel.add(link.withRel("all-users"));
+        return entityModel;
     }
 
     @DeleteMapping("/users/{id}")

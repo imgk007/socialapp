@@ -30,19 +30,49 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!--Spring Security for Authentication-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!--Actuator, for monitoring prod level-->
+		<!--access it using http://localhost:8080/actuator-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!--HAL Configuration, to explore the API-->
+		<!--Explore it http://localhost:8080-->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-explorer</artifactId>
+		</dependency>
+
+		<!--Dependency for HATEOAS-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+
 		<!-- This is for input validation from web-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
 		<!-- This Devtools config will be turned off once you make it as .jar, as we will be deploying,that time it will be as .jar file, while coding/testing it will be .java class-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -50,7 +80,9 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+
 		<!-- Config for openAPI/Swagger-->
+		<!--access it using http://localhost:8080/swagger-ui.html-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
